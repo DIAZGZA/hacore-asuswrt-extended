@@ -1,0 +1,3 @@
+# GITHUB Proposed Python stuff:
+*.py[cod]
+__pycache__
