@@ -349,7 +349,7 @@ class AsusWrtHttpBridge(AsusWrtBridge):
         clients_full_info = await self._api.async_get_clients_fullinfo()
         return {
             format_mac(mac): WrtDevice(dev.ip, dev.name, dev.node,
-                                       clients_full_info[0].get(mac, {"rssi": None}).get("rssi", None))
+                                       int(clients_full_info[0].get(mac, {"rssi": "0"}).get("rssi")))
             for mac, dev in api_devices.items()
         }
 

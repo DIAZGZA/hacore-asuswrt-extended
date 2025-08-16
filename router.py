@@ -124,7 +124,7 @@ class AsusWrtDevInfo:
             if not self._name:
                 self._name = dev_info.name or self._mac.replace(":", "_")
             self._ip_address = dev_info.ip
-            self._rssi = dev_info.rssi
+            self._rssi = dev_info.rssi if dev_info.rssi != 0 else None
             self._last_activity = utc_point_in_time
             self._connected = True
 
@@ -135,6 +135,7 @@ class AsusWrtDevInfo:
                 < consider_home
             )
             self._ip_address = None
+            self._rssi = None
 
     @property
     def is_connected(self) -> bool:
