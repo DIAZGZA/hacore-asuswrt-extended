@@ -1,0 +1,94 @@
+
+
+# ASUSWRT (Extended)
+
+Integración personalizada para conectar routers ASUSWRT con Home Assistant. Crea rastreadores para los dispositivos conectados y sensores con información del router. Permite configurar el intervalo de consulta y muestra el RSSI de los clientes cuando el router y el protocolo utilizados proporcionan ese dato.
+
+La integración consulta el router localmente y está basada en la integración ASUSWRT de [Home Assistant Core](https://www.home-assistant.io/integrations/asuswrt).
+
+## Funciones
+
+- Rastrea los dispositivos conectados y muestra su estado, nombre de host, dirección IP y MAC.
+- Muestra la intensidad de señal RSSI cuando está disponible.
+- Permite configurar el intervalo de consulta entre 5 y 300 segundos.
+- Expone sensores compatibles con el router, el firmware y el protocolo, como:
+  - Número de dispositivos conectados.
+  - Velocidades y totales de tráfico de subida y bajada.
+  - Uso de CPU, memoria y promedios de carga.
+  - Temperaturas y tiempo de actividad.
+- Admite conexiones por HTTP, HTTPS, SSH o Telnet.
+- Para conexiones SSH y Telnet, permite configurar el modo router o punto de acceso.
+
+## Instalación manual
+
+1. Crea el directorio de la integración personalizada:
+
+   ```text
+   <directorio_de_configuración_de_home_assistant>/custom_components/asuswrt_extended/
+   ```
+
+2. Copia los archivos de este repositorio en ese directorio. Por ejemplo, si tu configuración de Home Assistant está en `/config`:
+
+   ```bash
+   git clone https://github.com/pablogpz/hacore-asuswrt-extended.git \
+     /config/custom_components/asuswrt_extended
+   ```
+
+   Si ya tienes el repositorio clonado, copia su contenido directamente a `custom_components/asuswrt_extended`. Los archivos `manifest.json` y `__init__.py` deben quedar dentro de ese directorio.
+
+3. Reinicia Home Assistant.
+4. En la interfaz, ve a **Ajustes → Dispositivos y servicios → Añadir integración** y busca **ASUSWRT (Extended)**.
+
+Home Assistant instalará las dependencias Python declaradas en `manifest.json`. No se necesita un servicio adicional.
+
+## Configuración
+
+Añade la integración desde la interfaz de Home Assistant. Necesitarás los datos de conexión de tu router:
+
+- **Host:** nombre de host o dirección IP del router.
+- **Usuario:** cuenta del router.
+- **Protocolo:** HTTP, HTTPS, SSH o Telnet.
+- **Autenticación:** contraseña o, para SSH, una clave SSH. Home Assistant debe poder leer el archivo de clave.
+- **Puerto:** opcional; déjalo vacío para usar el puerto predeterminado del protocolo.
+
+En las conexiones SSH y Telnet también se solicita el modo de funcionamiento: **router** o **punto de acceso**.
+
+### Opciones
+
+Después de configurar la integración, puedes cambiar sus opciones desde la página de ASUSWRT (Extended):
+
+| Opción | Valor inicial | Descripción |
+| --- | --- | --- |
+| Intervalo de consulta | 30 segundos | Frecuencia de consulta, configurable entre 5 y 300 segundos. |
+| Considerar en casa | Valor predeterminado de Home Assistant | Tiempo de espera antes de marcar como ausente un dispositivo que ya no aparece. |
+| Rastrear dispositivos desconocidos | Desactivado | Incluye dispositivos sin nombre. |
+| Interfaz | `eth0` | Interfaz de red usada para las estadísticas en SSH/Telnet. |
+| Ruta de dnsmasq | `/var/lib/misc` | Ubicación del archivo de concesiones de dnsmasq para SSH/Telnet. |
+| Requerir IP | Activado | En modo punto de acceso, exige que los dispositivos tengan dirección IP. |
+
+Las opciones de interfaz y ruta de dnsmasq se ofrecen para SSH/Telnet; **Requerir IP** solo se aplica al modo punto de acceso.
+
+## Entidades
+
+La integración crea rastreadores para los clientes y sensores para los datos disponibles del router. La disponibilidad de los sensores depende del modelo, el firmware y el protocolo de conexión.
+
+Varios sensores de diagnóstico y estadísticas están deshabilitados de forma predeterminada. Para usarlos, habilítalos desde la página de la entidad en Home Assistant.
+
+Los rastreadores pueden mostrar el nombre del dispositivo, la dirección IP, la dirección MAC, el estado de conexión y la hora de la última actividad. El RSSI aparece cuando el router lo proporciona mediante el protocolo seleccionado.
+
+## Solución de problemas
+
+- Comprueba que Home Assistant puede acceder al router mediante el protocolo y el puerto elegidos.
+- Verifica el usuario y la contraseña, o que el archivo de clave SSH existe y es legible desde Home Assistant.
+- En configuraciones SSH/Telnet, comprueba el modo seleccionado y, si corresponde, la interfaz y la ruta del archivo de concesiones de dnsmasq.
+- No todos los routers ofrecen los mismos datos. La ausencia de un sensor puede deberse a que el modelo, firmware o protocolo no proporciona esa información.
+- Puedes descargar los diagnósticos desde la página del dispositivo en Home Assistant. La integración oculta credenciales y ciertos identificadores en esos datos.
+
+## Desarrollo
+
+El repositorio contiene los archivos de la integración en su raíz. No incluye una aplicación independiente ni comandos de pruebas definidos; para probar cambios, instala la integración en una instancia de Home Assistant.
+
+## Créditos
+
+Basada en la integración ASUSWRT de [home-assistant/core](https://github.com/home-assistant/core/tree/dev/homeassistant/components/asuswrt). Consulta la [documentación de ASUSWRT de Home Assistant](https://www.home-assistant.io/integrations/asuswrt) para obtener información general sobre la integración original.
+````
